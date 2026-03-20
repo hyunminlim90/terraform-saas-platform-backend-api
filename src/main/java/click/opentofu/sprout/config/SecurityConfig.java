@@ -28,24 +28,39 @@ public class SecurityConfig {
                         (request) -> request.getRequestURI().equals("/api/v1/auth/csrf-token"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/unique-id"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/emitter-object"),
+
+                        /**
+                         * 
+                         * sync-infra 는 현재 안쓰는 API 같음. (GitLab Pipeline 에서 쓰이던 것 같음)
+                         * 
+                         */
+
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/aws_sprout"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/opentofu-module/aws_sprout"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/gitlab-ci-scripts/aws_sprout"),
+
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/reset/aws_sprout"),
 
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/stream-emitter"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_sprout"),
+                        /**
+                         * 
+                         * 실제 사용하는 API (모듈 추가하는 곳)
+                         * 
+                         */
 
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_sprout")
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/stream-emitter"),
+                        
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_vpc"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_vpc")
+
                     );
             })
             .addFilterAfter(new CustomCsrfFilter(csrfTokenRepository), CsrfFilter.class);
