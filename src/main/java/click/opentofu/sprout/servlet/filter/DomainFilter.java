@@ -1,0 +1,34 @@
+package click.opentofu.sprout.servlet.filter;
+
+import java.io.IOException;
+
+import org.springframework.stereotype.Component;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+
+@Component
+public class DomainFilter implements Filter {
+
+    private final String ALLOWED_HOST = "java-ecs-task-definition.opentofu.click:7443";
+
+    @Override
+    public void doFilter(
+        ServletRequest request,
+        ServletResponse response,
+        FilterChain chain
+    ) throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+        String host = httpRequest.getHeader("Host");
+        if (ALLOWED_HOST.equals(host)) {
+            chain.doFilter(request, response);
+        } else {
+            throw new RuntimeException("do_filter");
+        }
+    }
+}

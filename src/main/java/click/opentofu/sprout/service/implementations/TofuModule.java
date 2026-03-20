@@ -1,0 +1,168 @@
+package click.opentofu.sprout.service.implementations;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.handler.tofu.module.interfaces.ModuleHandler;
+import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
+import click.opentofu.sprout.util.GeneralUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class TofuModule implements AsyncServiceSingle {
+
+    private final TaskExecutor taskExecutor;
+    private final GeneralUtils generalUtils;
+    private final Map<String, ModuleHandler> moduleHandlers;
+    
+    @Override
+    @Async("taskExecutor")
+    public <T> CompletableFuture<Object> mainWorkerAsync(T dto, SseEmitter unusedEmitter) {
+        return AsyncServiceSingle.super.mainWorkerAsync(dto, unusedEmitter);
+    }
+
+    @Override
+    public <T> CompletableFuture<Object> workerSingleSupplyAsync(T dto, SseEmitter unusedEmitter) {
+        ResourceDto resourceDto = generalUtils.castAwsCloudRequest(dto);
+
+        Map<String, Object> token = resourceDto.getToken();
+        String authEmailId = (String) token.get("auth_email_id");
+        String operation = resourceDto.getOperation();
+
+        resourceDto.setIsNextCallable(false);
+
+        return asyncWorkerSupply(
+            () -> {
+                try {
+                    
+                    log.info("-------------------------------------------------------------------------------------------------------------------------");
+                    log.info("AsyncServiceSingle-started for the tofu module to generate the 'module main {}' & config.yaml & terraform.tfstate files.");
+                    log.info("-------------------------------------------------------------------------------------------------------------------------");
+
+                    String uuid = ((String) token.get("account_id")).split(",")[1];
+                    String regionCode = resourceDto.getRegionCode();
+                    String awsAccessKey = (String) token.get("aws_access_key");
+                    String awsSecretAccessKey = (String) token.get("aws_secret_access_key");
+                    String awsSessionToken = (String) token.get("aws_session_token");
+                    String beanName = "tofu_module";
+
+                    Path configFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", "config.yaml");
+                    Path mainFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", "main.tf");
+                    Path stateFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", "terraform.tfstate");
+
+                    boolean configFileExists = Files.exists(configFilePath);
+                    boolean mainFileExists = Files.exists(mainFilePath);
+                    boolean stateFileExists = Files.exists(stateFilePath);
+
+                    ModuleHandler moduleHandler = moduleHandlers.get(beanName);
+
+                    List<Map<String, Object>> draftVersion = resourceDto.getDraftVersion();
+
+                    if (draftVersion != null) {
+                        String mainFileMergeString = moduleHandler.buildTofuModuleMainFile(regionCode, awsAccessKey, awsSecretAccessKey, awsSessionToken);
+                        String configFileMergeString = moduleHandler.buildTofuModuleConfigFile(draftVersion, operation);
+                        String stateFileMergeString = moduleHandler.buildTofuModuleStateFile(draftVersion);
+
+                        moduleHandler.mainWorkerModule(mainFileExists, mainFilePath, mainFileMergeString);
+                        log.info("--------------------------------------------------------------------------------");
+                        log.info("Completed Create tofu module main.tf file. Requester: " + authEmailId);
+                        log.info("--------------------------------------------------------------------------------");
+
+                        moduleHandler.mainWorkerModule(configFileExists, configFilePath, configFileMergeString);
+                        log.info("--------------------------------------------------------------------------------");
+                        log.info("Completed Create tofu module config.yaml file. Requester: " + authEmailId);
+                        log.info("--------------------------------------------------------------------------------");
+
+                        moduleHandler.mainWorkerModule(stateFileExists, stateFilePath, stateFileMergeString);
+                        log.info("--------------------------------------------------------------------------------");
+                        log.info("Completed Create tofu module tofu.tfstate file. Requester: " + authEmailId);
+                        log.info("--------------------------------------------------------------------------------");
+
+                        if (!TEXTAREA_PARAMS.isEmpty()) {
+
+                            for (Map<String, Object> obj : draftVersion) {
+                                String taskId = (String) obj.get("task_id");
+                                if (taskId == null) { continue; };
+
+                                /** Normalize Id for filename */
+
+                                if (!taskId.contains("create-only-")) {
+                                    if (taskId.startsWith("arn:")) {
+                                        String resource = taskId.split(":", 6)[5];
+                                        String[] tokens = resource.split("[/:]");
+                                        taskId = String.join("-", tokens);
+                                    }
+                                }
+
+                                for (String key : TEXTAREA_PARAMS) {
+                                    Object val = obj.get(key);
+
+                                    if (val != null && (val instanceof String || val instanceof List || val instanceof Map)) {
+                                        Path textareaFilePath;
+
+                                        /** File extension varies by textarea parameter */
+
+                                        if ("containerDefinitions".equals(key)) {
+                                            textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", taskId + "_" + key + ".json");
+                                        } else {
+                                            textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", taskId + "_" + key + ".default");
+                                        }
+
+                                        boolean textareaFileExists = Files.exists(textareaFilePath);
+                                        String unescaped = null;
+
+                                        if (val instanceof String) { unescaped = StringEscapeUtils.unescapeJava((String) val); }
+
+                                        else if (val instanceof List || val instanceof Map) {
+                                            ObjectMapper mapper = new ObjectMapper();
+                                            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+                                            DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
+                                            DefaultIndenter indenter = new DefaultIndenter("    ", "\n");
+                                            prettyPrinter.indentObjectsWith(indenter);
+                                            prettyPrinter.indentArraysWith(indenter);
+
+                                            unescaped = StringEscapeUtils.unescapeJava(mapper.writer(prettyPrinter).writeValueAsString(val));
+                                        }
+
+                                        String textareaFileMergeString = moduleHandler.buildTofuTextareaFile(unescaped);
+
+                                        moduleHandler.mainWorkerModule(textareaFileExists, textareaFilePath, textareaFileMergeString);
+                                        log.info("----------------------------------------------------------------------------------------------");
+                                        log.info("Completed Create tofu textarea " + taskId + "_" + key + " file. Requester: " + authEmailId);
+                                        log.info("----------------------------------------------------------------------------------------------");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception error) {
+                    throw new RuntimeException(error);
+                }
+
+                resourceDto.setIsNextCallable(true);
+                return new Object();
+            },
+            taskExecutor
+        );  
+    }
+}
