@@ -45,6 +45,14 @@ public class GeneralUtils {
             log.warn("----------------------------------------------------------------");
             throw new RuntimeException("is_authorized_for_write");
         }
+
+        List<String> allowedEmailIds = List.of(
+            "test1"
+        );
+    
+        if (!allowedEmailIds.contains(authEmailId)) {
+            throw new RuntimeException("general_utils_validate_allowed_email_id_unauthorized_email");
+        }
     }
 
     public List<String> castToListOfString (
