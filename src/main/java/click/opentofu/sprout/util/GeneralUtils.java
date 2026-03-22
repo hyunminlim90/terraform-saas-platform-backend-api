@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.service.interfaces.AsyncService;
 
 import lombok.extern.slf4j.Slf4j;

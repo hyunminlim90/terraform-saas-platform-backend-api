@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import click.opentofu.sprout.dto.ResourceDto;
-import click.opentofu.sprout.dto.TofuDto;
+import click.opentofu.sprout.dto.interfaces.ModuleDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
 import click.opentofu.sprout.util.TransactionalUtils;
@@ -43,6 +43,8 @@ public class LoadDraftVersion implements AsyncServiceSingle {
         String accountId = ((String) token.get("account_id")).split(",")[0];
         String region = resourceDto.getRegionCode();
         String authUserIndex = resourceDto.getAuthUserIndex();
+
+        String moduleName = resourceDto.getModuleName();
         
         resourceDto.setIsNextCallable(false);
 
@@ -52,14 +54,14 @@ public class LoadDraftVersion implements AsyncServiceSingle {
                 log.info("AsyncServiceSingle-started to fetch Draft Version entities.");
                 log.info("------------------------------------------------------------");
 
-                String repositoryBeanName = "tofu_repository";
+                String repositoryBeanName = moduleName.substring("aws_".length()) + "_repository";
                 JpaRepository<?, ?> repository = repositoryHandlers.get(repositoryBeanName);
 
                 if (repository == null) {
                     throw new RuntimeException("load_draft_version_repository_null");
                 }
 
-                List<TofuDto> result = transactionalUtils.fetchWithLazyInit(repository, authUserIndex, accountId, region);
+                List<ModuleDto> result = transactionalUtils.fetchWithLazyInit(repository, authUserIndex, accountId, region, moduleName);
 
                 return result;
             },

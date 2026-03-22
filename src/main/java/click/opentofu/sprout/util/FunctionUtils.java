@@ -9,8 +9,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import click.opentofu.sprout.dto.ResourceDto;
-
+import click.opentofu.sprout.dto.request.ResourceDto;
 import lombok.RequiredArgsConstructor;
 
 @Component

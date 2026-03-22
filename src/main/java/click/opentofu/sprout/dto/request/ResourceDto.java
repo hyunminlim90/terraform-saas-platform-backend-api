@@ -1,4 +1,4 @@
-package click.opentofu.sprout.dto;
+package click.opentofu.sprout.dto.request;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +27,5 @@ public class ResourceDto {
     private List<List<Map<String, Object>>> duplicateDraftVersion;
     private String uniqueId;
     private String operation;
+    private String moduleName;
 }

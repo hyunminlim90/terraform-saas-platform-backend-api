@@ -11,11 +11,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.tofu.resource.interfaces.ResourceHandler;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
-import click.opentofu.sprout.dto.ResourceDto;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,9 +53,11 @@ public class TofuResource implements AsyncServiceSingle {
                 String accountId = ((String) token.get("account_id")).split(",")[0];
                 String uuid = ((String) token.get("account_id")).split(",")[1];
                 String regionCode = resourceDto.getRegionCode();
+
+                String moduleName = resourceDto.getModuleName();
                 
-                String beanName = "tofu_resource";
-                Path filePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_resource", "aws_sprout", "main.tf");
+                String beanName = "tofu_resource_" + moduleName.substring("aws_".length());
+                Path filePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_resource", moduleName, "main.tf");
                 boolean fileExists = Files.exists(filePath);
 
                 ResourceHandler resourceHandler = resourceHandlers.get(beanName);

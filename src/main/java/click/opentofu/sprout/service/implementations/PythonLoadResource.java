@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.python.interfaces.PythonHandler;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.AutoCloseUtils;
@@ -55,10 +55,14 @@ public class PythonLoadResource implements AsyncServiceSingle {
                     String awsAccessKey = (String) token.get("aws_access_key");
                     String awsSecretAccessKey = (String) token.get("aws_secret_access_key");
                     String awsSessionToken = (String) token.get("aws_session_token");
-                    String beanName = "boto3_sprout";
+                    
+                    String moduleName = resourceDto.getModuleName();
+
+                    String beanName = "boto3_" + moduleName.substring("aws_".length());
+
                     String authEmailId = (String) token.get("auth_email_id");
 
-                    Path filePath = Paths.get(ROOT_PATH, authEmailId, uuid, region, "boto3", "aws_sprout.py");
+                    Path filePath = Paths.get(ROOT_PATH, authEmailId, uuid, region, "boto3", moduleName + ".py");
                     PythonHandler pythonHandler = pythonHandlers.get(beanName);
                     String mergeString = pythonHandler.buildAwsPythonFile(ROOT_PATH, authEmailId, uuid, region, awsAccessKey, awsSecretAccessKey, awsSessionToken);
                     pythonHandler.mainWorkerPython(filePath, mergeString);

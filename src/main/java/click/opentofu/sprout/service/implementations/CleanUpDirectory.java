@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
 import lombok.RequiredArgsConstructor;

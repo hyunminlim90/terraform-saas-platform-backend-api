@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.entity.interfaces.EntityHandler;
 
 import lombok.RequiredArgsConstructor;
@@ -47,6 +47,8 @@ public class EntitySaveResource implements AsyncServiceSingle {
         String authUserIndex = resourceDto.getAuthUserIndex();
         String resourceSaveName = resourceDto.getResourceSaveName();
         String authEmailId = (String) token.get("auth_email_id");
+
+        String moduleName = resourceDto.getModuleName();
         
         resourceDto.setIsNextCallable(false);
 
@@ -56,7 +58,7 @@ public class EntitySaveResource implements AsyncServiceSingle {
                 log.info("AsyncServiceSingle-started for saving resource data received from the frontend to the database using an entity builder class.");
                 log.info("-----------------------------------------------------------------------------------------------------------------------------");
 
-                String beanName = "entity_builder_sprout";
+                String beanName = "entity_builder_" + moduleName.substring("aws_".length());
                 EntityHandler entityHandler = entityHandlers.get(beanName);
 
                 Set<Map.Entry<String, JsonNode>> entries = mapper.valueToTree(resource).properties();
@@ -64,7 +66,7 @@ public class EntitySaveResource implements AsyncServiceSingle {
                     JsonNode value = entry.getValue();
                     if (value.isArray()) {
                         for (JsonNode parameters : value) {
-                            entityHandler.buildEntityAndSave(parameters, resourceSaveName, authUserIndex);
+                            entityHandler.buildEntityAndSave(parameters, resourceSaveName, authUserIndex, moduleName);
                         }
                     } else {
                         throw new RuntimeException("entity_save_resource_value_is_array");

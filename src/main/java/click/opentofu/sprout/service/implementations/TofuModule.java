@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.tofu.module.interfaces.ModuleHandler;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
@@ -63,11 +63,14 @@ public class TofuModule implements AsyncServiceSingle {
                     String awsAccessKey = (String) token.get("aws_access_key");
                     String awsSecretAccessKey = (String) token.get("aws_secret_access_key");
                     String awsSessionToken = (String) token.get("aws_session_token");
-                    String beanName = "tofu_module";
 
-                    Path configFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", "config.yaml");
-                    Path mainFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", "main.tf");
-                    Path stateFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", "terraform.tfstate");
+                    String moduleName = resourceDto.getModuleName();
+
+                    String beanName = "tofu_module_" + moduleName.substring("aws_".length());
+
+                    Path configFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, "config.yaml");
+                    Path mainFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, "main.tf");
+                    Path stateFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, "terraform.tfstate");
 
                     boolean configFileExists = Files.exists(configFilePath);
                     boolean mainFileExists = Files.exists(mainFilePath);
@@ -97,23 +100,35 @@ public class TofuModule implements AsyncServiceSingle {
                         log.info("Completed Create tofu module tofu.tfstate file. Requester: " + authEmailId);
                         log.info("--------------------------------------------------------------------------------");
 
-                        if (!TEXTAREA_PARAMS.isEmpty()) {
+                        if (!TEXTAREA_PARAMS_BY_MODULE.getOrDefault(moduleName, List.of()).isEmpty()) {
 
                             for (Map<String, Object> obj : draftVersion) {
-                                String taskId = (String) obj.get("task_id");
-                                if (taskId == null) { continue; };
+
+                                String moduleId;
+
+                                switch (moduleName) {
+
+                                    case "aws_vpc":
+                                        moduleId = (String) obj.get("vpc_id");
+                                        break;
+
+                                    default:
+                                        throw new RuntimeException("tofu_module_service_layer_async_worker_supply_module_id_define_switch_default");
+                                }
+
+                                if (moduleId == null) { continue; };
 
                                 /** Normalize Id for filename */
 
-                                if (!taskId.contains("create-only-")) {
-                                    if (taskId.startsWith("arn:")) {
-                                        String resource = taskId.split(":", 6)[5];
+                                if (!moduleId.contains("create-only-")) {
+                                    if (moduleId.startsWith("arn:")) {
+                                        String resource = moduleId.split(":", 6)[5];
                                         String[] tokens = resource.split("[/:]");
-                                        taskId = String.join("-", tokens);
+                                        moduleId = String.join("-", tokens);
                                     }
                                 }
 
-                                for (String key : TEXTAREA_PARAMS) {
+                                for (String key : TEXTAREA_PARAMS_BY_MODULE.getOrDefault(moduleName, List.of())) {
                                     Object val = obj.get(key);
 
                                     if (val != null && (val instanceof String || val instanceof List || val instanceof Map)) {
@@ -121,10 +136,10 @@ public class TofuModule implements AsyncServiceSingle {
 
                                         /** File extension varies by textarea parameter */
 
-                                        if ("containerDefinitions".equals(key)) {
-                                            textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", taskId + "_" + key + ".json");
+                                        if ("aws_ecs_task_definition".equals(moduleName) && "containerDefinitions".equals(key)) {
+                                            textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, moduleId + "_" + key + ".json");
                                         } else {
-                                            textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout", taskId + "_" + key + ".default");
+                                            textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, moduleId + "_" + key + ".default");
                                         }
 
                                         boolean textareaFileExists = Files.exists(textareaFilePath);
@@ -148,7 +163,7 @@ public class TofuModule implements AsyncServiceSingle {
 
                                         moduleHandler.mainWorkerModule(textareaFileExists, textareaFilePath, textareaFileMergeString);
                                         log.info("----------------------------------------------------------------------------------------------");
-                                        log.info("Completed Create tofu textarea " + taskId + "_" + key + " file. Requester: " + authEmailId);
+                                        log.info("Completed Create tofu textarea " + moduleId + "_" + key + " file. Requester: " + authEmailId);
                                         log.info("----------------------------------------------------------------------------------------------");
                                     }
                                 }

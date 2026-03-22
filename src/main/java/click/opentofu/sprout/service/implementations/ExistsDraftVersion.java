@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.entity.interfaces.BaseQueryRepository;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
@@ -44,6 +44,8 @@ public class ExistsDraftVersion implements AsyncServiceSingle {
         String authEmailId = (String) token.get("auth_email_id");
         List<List<Map<String, Object>>> duplicateDraftVersion = resourceDto.getDuplicateDraftVersion();
 
+        String moduleName = resourceDto.getModuleName();
+
         resourceDto.setIsNextCallable(false);
 
         return asyncWorkerSupply(
@@ -57,7 +59,7 @@ public class ExistsDraftVersion implements AsyncServiceSingle {
                     .map((innerList) -> (String) innerList.get(0).get("resource_save_name"))
                     .collect(Collectors.toList());
 
-                String repositoryBeanName = "tofu_repository";
+                String repositoryBeanName = moduleName.substring("aws_".length()) + "_repository";
                 JpaRepository<?, ?> repository = repositoryHandlers.get(repositoryBeanName);
 
                 if (repository == null) {
@@ -69,7 +71,7 @@ public class ExistsDraftVersion implements AsyncServiceSingle {
                 }
 
                 BaseQueryRepository<?> baseQueryRepository = (BaseQueryRepository<?>) repository;
-                List<String> result = baseQueryRepository.findExistingResourceSaveNames(authUserIndex, accountId, region, resourceSaveNames);
+                List<String> result = baseQueryRepository.findExistingResourceSaveNames(authUserIndex, accountId, region, moduleName, resourceSaveNames);
 
                 if (!result.isEmpty()) { return result; }
 

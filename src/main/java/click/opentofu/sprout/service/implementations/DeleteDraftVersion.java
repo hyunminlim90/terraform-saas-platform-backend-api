@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.entity.interfaces.BaseQueryRepository;
 import click.opentofu.sprout.util.TransactionalUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +29,13 @@ public class DeleteDraftVersion {
         String resourceSaveName = resourceDto.getResourceSaveName();
         String authEmailId = (String) token.get("auth_email_id");
 
+        String moduleName = resourceDto.getModuleName();
+
         log.info("----------------------------------------------------------------------------------");
         log.info("DeleteDraftVersion-started for Deleting resource save name for account and region.");
         log.info("----------------------------------------------------------------------------------");
 
-        String repositoryBeanName = "tofu_repository";
+        String repositoryBeanName = moduleName.substring("aws_".length()) + "_repository";
         JpaRepository<?, ?> repository = repositoryHandlers.get(repositoryBeanName);
 
         if (repository == null) {
@@ -46,9 +48,9 @@ public class DeleteDraftVersion {
 
         BaseQueryRepository<?> baseQueryRepository = (BaseQueryRepository<?>) repository;
 
-        transactionalUtils.deleteResourceSaveName(baseQueryRepository, authUserIndex, accountId, region, resourceSaveName);
+        transactionalUtils.deleteResourceSaveName(baseQueryRepository, authUserIndex, accountId, region, resourceSaveName, moduleName);
 
-        Boolean result = baseQueryRepository.existsByTenantIdAndAccountIdAndRegionAndResourceSaveName(authUserIndex, accountId, region, resourceSaveName);
+        Boolean result = baseQueryRepository.existsByTenantIdAndAccountIdAndRegionAndResourceSaveNameAndModuleName(authUserIndex, accountId, region, resourceSaveName, moduleName);
         if (result) { throw new RuntimeException("delete_draft_version_result_exists"); }
 
         log.info("-----------------------------------------------------------------------------");

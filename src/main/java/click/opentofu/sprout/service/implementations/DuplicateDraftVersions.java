@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.entity.interfaces.EntityHandler;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
@@ -46,6 +46,9 @@ public class DuplicateDraftVersions implements AsyncServiceSingle {
         String region = resourceDto.getRegionCode();
         String authUserIndex = resourceDto.getAuthUserIndex();
         String authEmailId = (String) token.get("auth_email_id");
+
+        String moduleName = resourceDto.getModuleName();
+
         List<List<Map<String, Object>>> duplicateDraftVersion = resourceDto.getDuplicateDraftVersion();
 
         resourceDto.setIsNextCallable(false);
@@ -56,13 +59,13 @@ public class DuplicateDraftVersions implements AsyncServiceSingle {
                 log.info("AsyncServiceSingle-started for duplicating draft version received from the frontend to the database using an duplicate entity builder class.");
                 log.info("--------------------------------------------------------------------------------------------------------------------------------------------");
 
-                String beanName = "duplicate_entity_builder_sprout";
+                String beanName = "duplicate_entity_builder_" + moduleName.substring("aws_".length());
                 EntityHandler entityHandler = entityHandlers.get(beanName);
 
                 for (List<Map<String, Object>> innerList : duplicateDraftVersion) {
                     for (Map<String, Object> draftVersion : innerList) {
                         JsonNode parameters = mapper.valueToTree(draftVersion);
-                        entityHandler.duplicateBuildEntityAndSave(parameters, authUserIndex, accountId, region);
+                        entityHandler.duplicateBuildEntityAndSave(parameters, authUserIndex, accountId, region, moduleName);
                     }
                 }
 

@@ -1,6 +1,7 @@
 package click.opentofu.sprout.service.interfaces;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
@@ -13,7 +14,8 @@ public interface AsyncService {
     Integer TIMEOUT_SECONDS_MULTI = AppConstants.TIMEOUT_SECONDS_MULTI;
     Integer TIMEOUT_SECONDS_SINGLE = AppConstants.TIMEOUT_SECONDS_SINGLE;
     String ROOT_PATH = AppConstants.ROOT_PATH;
-    List<String> TEXTAREA_PARAMS = AppConstants.TEXTAREA_PARAMS;
+
+    Map<String, List<String>> TEXTAREA_PARAMS_BY_MODULE = AppConstants.TEXTAREA_PARAMS_BY_MODULE;
 
     default public <T> CompletableFuture<Object> asyncWorkerSupply (
         Supplier<Object> logicFunction,

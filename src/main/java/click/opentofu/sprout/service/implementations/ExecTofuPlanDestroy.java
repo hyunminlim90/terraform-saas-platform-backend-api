@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.redis.SemaphoreProvider;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
@@ -47,6 +47,8 @@ public class ExecTofuPlanDestroy implements AsyncServiceSingle {
 
         final Path[] deleteBoto3DirectoryPath = new Path[1];
 
+        String moduleName = resourceDto.getModuleName();
+
         resourceDto.setIsNextCallable(false);
 
         return asyncWorkerSupply(
@@ -71,7 +73,7 @@ public class ExecTofuPlanDestroy implements AsyncServiceSingle {
 
                     String uuid = ((String) token.get("account_id")).split(",")[1];
                     String regionCode = resourceDto.getRegionCode();
-                    Path workingDirPath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", "aws_sprout");
+                    Path workingDirPath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName);
 
                     deleteBoto3DirectoryPath[0] = Paths.get(ROOT_PATH, authEmailId);
 

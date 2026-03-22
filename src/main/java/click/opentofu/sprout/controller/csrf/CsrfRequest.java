@@ -1,4 +1,4 @@
-package click.opentofu.sprout.controller;
+package click.opentofu.sprout.controller.csrf;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

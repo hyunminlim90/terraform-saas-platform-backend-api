@@ -18,8 +18,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import click.opentofu.sprout.dto.ResourceDto;
-import click.opentofu.sprout.dto.TofuDto;
+import click.opentofu.sprout.dto.interfaces.ModuleDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
+import click.opentofu.sprout.dto.response.VpcDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
 
@@ -49,7 +50,7 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
 
         final Path[] deleteBoto3DirectoryPath = new Path[1];
 
-        List<TofuDto> resources = new ArrayList<>();
+        List<ModuleDto> resources = new ArrayList<>();
         
         resourceDto.setIsNextCallable(false);
 
@@ -64,11 +65,13 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
                     String authEmailId = (String) token.get("auth_email_id");
                     String region = resourceDto.getRegionCode();
 
-                    Path filePath = Paths.get(ROOT_PATH, authEmailId, uuid, region, "boto3", "aws_sprout.json");
+                    String moduleName = resourceDto.getModuleName();
+
+                    Path filePath = Paths.get(ROOT_PATH, authEmailId, uuid, region, "boto3", moduleName + ".json");
                     deleteBoto3DirectoryPath[0] = Paths.get(ROOT_PATH, authEmailId, uuid, region, "boto3");
                     File jsonFile = new File(filePath.toString());
                     JsonNode attributesNode = mapper.readTree(jsonFile);
-                    String atPath = "/outputs/aws_sprout/value";
+                    String atPath = "/outputs/" + moduleName + "/value";
 
                     Set<Map.Entry<String, JsonNode>> entries = attributesNode.at(atPath).properties();
 
@@ -79,12 +82,20 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
                     /** Json 필드와 Dto 필드 매핑 실패 시 해당 필드는 무시하고 진행 */
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                     for (Map.Entry<String, JsonNode> entry : entries) {
-                        // entry.getKey();
-                        TofuDto tofuDto = mapper.convertValue(
-                            entry.getValue(),
-                            TofuDto.class
-                        );
-                        resources.add(tofuDto);
+                        
+                        ModuleDto resource;
+
+                        switch (moduleName) {
+                            // entry.getKey();
+
+                            case "aws_vpc":
+                                resource = mapper.convertValue(entry.getValue(), VpcDto.class);
+                                break;
+
+                            default:
+                                throw new RuntimeException("json_node_load_resource_service_layer_async_worker_supply_switch_default");
+                        }
+                        resources.add(resource);
                     }
                 } catch (Exception error) {
                     throw new RuntimeException(error);

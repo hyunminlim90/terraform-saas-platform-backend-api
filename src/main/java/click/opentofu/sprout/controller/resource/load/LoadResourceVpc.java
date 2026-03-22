@@ -1,4 +1,4 @@
-package click.opentofu.sprout.controller;
+package click.opentofu.sprout.controller.resource.load;
 
 import java.util.List;
 import java.util.Map;
@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.FunctionUtils;
 import click.opentofu.sprout.util.GeneralUtils;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,24 +25,26 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(path = "/api/v1/request")
 @RequiredArgsConstructor
-public class DuplicateDraftRequest {
+public class LoadResourceVpc {
 
     private final GeneralUtils generalUtils;
     private final FunctionUtils functionUtils;
 
     private final Map<String, AsyncServiceSingle> asyncServiceSingleMap;
-    
+
     @CrossOrigin(
         origins = {
             "https://studio.opentofu.click"
         },
         allowCredentials = "true"
     )
-    @PostMapping(path = "/aws-resources/duplicate-draft/aws_sprout")
-    public CompletableFuture<ResponseEntity<Map<String, Object>>> existsDraftVersion (
+    @PostMapping(path = "/aws-resources/load-resource/aws_vpc")
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> pythonLoadResource (
         @RequestBody ResourceDto resourceDto,
         HttpServletRequest request
     ) {
+        resourceDto.setModuleName("aws_vpc");
+
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
@@ -50,17 +53,17 @@ public class DuplicateDraftRequest {
 
         return functionUtils.asyncChain(
             resourceDto,
-            () -> { return asyncServiceSingle(resourceDto, null, "existsDraftVersion"); },
-            () -> { return duplicateDraftVersions(resourceDto); }
+            () -> { return asyncServiceSingle(resourceDto, null, "pythonLoadResource"); },
+            () -> { return jsonNodeLoadResource(resourceDto); }
         );
     }
 
-    public CompletableFuture<ResponseEntity<Map<String, Object>>> duplicateDraftVersions (
+    public CompletableFuture<ResponseEntity<Map<String, Object>>> jsonNodeLoadResource (
         ResourceDto resourceDto
     ) {
         return functionUtils.asyncChain(
             resourceDto,
-            () -> { return asyncServiceSingle(resourceDto, null, "duplicateDraftVersions"); },
+            () -> { return asyncServiceSingle(resourceDto, null, "jsonNodeLoadResource"); },
             () -> { return CompletableFuture.completedFuture(ResponseEntity.ok(Map.of("empty_task", "null"))); }
         );
     }

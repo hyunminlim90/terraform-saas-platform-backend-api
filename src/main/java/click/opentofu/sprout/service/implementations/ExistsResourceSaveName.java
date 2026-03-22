@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
-import click.opentofu.sprout.dto.ResourceDto;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.handler.entity.interfaces.BaseQueryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -44,6 +44,8 @@ public class ExistsResourceSaveName implements AsyncServiceSingle {
         String authUserIndex = resourceDto.getAuthUserIndex();
         String authEmailId = (String) token.get("auth_email_id");
         String resourceSaveName = resourceDto.getResourceSaveName();
+
+        String moduleName = resourceDto.getModuleName();
         
         resourceDto.setIsNextCallable(false);
 
@@ -53,7 +55,7 @@ public class ExistsResourceSaveName implements AsyncServiceSingle {
                 log.info("AsyncServiceSingle-started for checking if resource save name exists.");
                 log.info("----------------------------------------------------------------------");
 
-                String repositoryBeanName = "tofu_repository";
+                String repositoryBeanName = moduleName.substring("aws_".length()) + "_repository";
                 JpaRepository<?, ?> repository = repositoryHandlers.get(repositoryBeanName);
 
                 if (repository == null) {
@@ -65,7 +67,7 @@ public class ExistsResourceSaveName implements AsyncServiceSingle {
                 }
 
                 BaseQueryRepository<?> baseQueryRepository = (BaseQueryRepository<?>) repository;
-                Boolean result = baseQueryRepository.existsByTenantIdAndAccountIdAndRegionAndResourceSaveName(authUserIndex, accountId, region, resourceSaveName);
+                Boolean result = baseQueryRepository.existsByTenantIdAndAccountIdAndRegionAndResourceSaveNameAndModuleName(authUserIndex, accountId, region, resourceSaveName, moduleName);
 
                 if (result) { throw new RuntimeException("exists_resource_save_name_result_exists"); }
 

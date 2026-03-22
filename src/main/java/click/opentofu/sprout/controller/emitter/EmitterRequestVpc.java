@@ -1,4 +1,4 @@
-package click.opentofu.sprout.controller;
+package click.opentofu.sprout.controller.emitter;
 
 import java.util.List;
 import java.util.Map;
@@ -18,9 +18,8 @@ import click.opentofu.sprout.util.EmitterUtils;
 import click.opentofu.sprout.util.FunctionUtils;
 import click.opentofu.sprout.util.GeneralUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
-import click.opentofu.sprout.dto.ResourceDto;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(path = "/api/v1/request")
 @RequiredArgsConstructor
-public class EmitterRequest {
+public class EmitterRequestVpc {
     
     private final GeneralUtils generalUtils;
     private final FunctionUtils functionUtils;
@@ -42,7 +41,7 @@ public class EmitterRequest {
         },
         allowCredentials = "true"
     )
-    @PostMapping(path = "/aws-resources/issue-unique-id/aws_sprout")
+    @PostMapping(path = "/aws-resources/issue-unique-id/aws_vpc")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> issueUniqueId (
         @RequestBody ResourceDto resourceDto,
         HttpServletRequest request
@@ -80,11 +79,13 @@ public class EmitterRequest {
         },
         allowCredentials = "true"
     )
-    @PostMapping(path = "/aws-resources/exec-tofu-plan/aws_sprout")
+    @PostMapping(path = "/aws-resources/exec-tofu-plan/aws_vpc")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> cleanUpDirectoryPlan (
         @RequestBody ResourceDto resourceDto,
         HttpServletRequest request
     ) {
+        resourceDto.setModuleName("aws_vpc");
+
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
@@ -137,11 +138,13 @@ public class EmitterRequest {
         },
         allowCredentials = "true"
     )
-    @PostMapping(path = "/aws-resources/exec-tofu-apply/aws_sprout")
+    @PostMapping(path = "/aws-resources/exec-tofu-apply/aws_vpc")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> cleanUpDirectoryApply (
         @RequestBody ResourceDto resourceDto,
         HttpServletRequest request
     ) {
+        resourceDto.setModuleName("aws_vpc");
+
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
@@ -194,11 +197,13 @@ public class EmitterRequest {
         },
         allowCredentials = "true"
     )
-    @PostMapping(path = "/aws-resources/exec-tofu-plan-destroy/aws_sprout")
+    @PostMapping(path = "/aws-resources/exec-tofu-plan-destroy/aws_vpc")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> cleanUpDirectoryPlanDestroy (
         @RequestBody ResourceDto resourceDto,
         HttpServletRequest request
     ) {
+        resourceDto.setModuleName("aws_vpc");
+
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
@@ -251,11 +256,13 @@ public class EmitterRequest {
         },
         allowCredentials = "true"
     )
-    @PostMapping(path = "/aws-resources/exec-tofu-destroy/aws_sprout")
+    @PostMapping(path = "/aws-resources/exec-tofu-destroy/aws_vpc")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> cleanUpDirectoryDestroy (
         @RequestBody ResourceDto resourceDto,
         HttpServletRequest request
     ) {
+        resourceDto.setModuleName("aws_vpc");
+
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
