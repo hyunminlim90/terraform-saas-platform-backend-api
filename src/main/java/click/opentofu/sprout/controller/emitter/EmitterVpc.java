@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(path = "/api/v1/request")
 @RequiredArgsConstructor
-public class EmitterRequestVpc {
+public class EmitterVpc {
     
     private final GeneralUtils generalUtils;
     private final FunctionUtils functionUtils;
