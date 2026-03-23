@@ -44,6 +44,20 @@ public class SecurityConfig {
 
                         /**
                          * 
+                         * sts 에서 사용하는 API
+                         * 
+                         */
+
+                        (request) -> request.getRequestURI().equals("/api/v1/register/temporary-credential"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-accounts"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-accounts/auto-clear"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-accounts/auto-clear/parallel"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-account/delete"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/workspace/empty/discard"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/downloads"),
+
+                        /**
+                         * 
                          * 실제 사용하는 API (모듈 추가하는 곳)
                          * 
                          */

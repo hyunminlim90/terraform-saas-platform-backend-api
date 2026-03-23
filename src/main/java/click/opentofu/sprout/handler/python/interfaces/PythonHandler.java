@@ -17,4 +17,5 @@ public interface PythonHandler {
     }
 
     default String buildAwsPythonFile (String ROOT_PATH, String authEmailId, String uuid, String region, String awsAccessKey, String awsSecretAccessKey, String awsSessionToken) { return null; };
+    default String buildAwsPythonFileForSts (String ROOT_PATH, String uuid, String authEmailId, String awsAccessKey, String awsSecretAccessKey, String awsSessionToken) { return null; };
 }

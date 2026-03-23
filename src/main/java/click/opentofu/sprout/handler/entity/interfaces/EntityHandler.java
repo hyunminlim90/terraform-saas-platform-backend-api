@@ -7,7 +7,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import click.opentofu.sprout.dto.sts.TemporaryCredential;
+
 public interface EntityHandler {
+    default void buildEntityAndSaveForSts (JsonNode parameters, TemporaryCredential temporaryCredential) {};
     default void buildEntityAndSave (JsonNode parameters, String resourceSaveName, String authUserIndex, String moduleName) {};
     default void duplicateBuildEntityAndSave (JsonNode parameters, String authUserIndex, String accountId, String region, String moduleName) {};
 

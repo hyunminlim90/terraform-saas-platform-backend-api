@@ -130,6 +130,23 @@
 			<version>3.23.5</version>
 		</dependency>
 
+		<!-- sts -->
+
+		<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.zeroturnaround/zt-zip -->
+		<dependency>
+			<groupId>org.zeroturnaround</groupId>
+			<artifactId>zt-zip</artifactId>
+			<version>1.17</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
