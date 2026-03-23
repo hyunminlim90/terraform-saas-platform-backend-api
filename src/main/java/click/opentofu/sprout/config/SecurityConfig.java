@@ -36,11 +36,11 @@ public class SecurityConfig {
                          */
 
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/opentofu-module/aws_sprout"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/gitlab-ci-scripts/aws_sprout"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/aws_not_used"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/opentofu-module/aws_not_used"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/sync-infra/gitlab-ci-scripts/aws_not_used"),
 
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/reset/aws_sprout"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/reset/aws_not_used"),
 
                         /**
                          * 
