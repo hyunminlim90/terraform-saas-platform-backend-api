@@ -45,20 +45,20 @@ public class GeneralUtils {
 
     public void isAuthorizedForWrite(
         List<String> roles,
-        String authEmailId
+        String email
     ) {
         if (!roles.contains("write")) {
             log.warn("----------------------------------------------------------------");
-            log.warn("You do not have the 'write' permission ! Requester: " + authEmailId);
+            log.warn("You do not have the 'write' permission ! Requester: " + email);
             log.warn("----------------------------------------------------------------");
             throw new RuntimeException("is_authorized_for_write");
         }
 
         List<String> allowedEmailIds = List.of(
-            "test1"
+            "hyunmin.lim.90@icloud.com"
         );
     
-        if (!allowedEmailIds.contains(authEmailId)) {
+        if (!allowedEmailIds.contains(email)) {
             throw new RuntimeException("general_utils_validate_allowed_email_id_unauthorized_email");
         }
     }

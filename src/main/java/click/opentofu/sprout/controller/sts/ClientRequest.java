@@ -1,6 +1,5 @@
 package click.opentofu.sprout.controller.sts;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,10 +41,10 @@ public class ClientRequest {
         @RequestBody TemporaryCredential temporaryCredential,
         HttpServletRequest request
     ) {
-        Object objectRoles = request.getAttribute("roles");
-        List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = temporaryCredential.getAuthEmailId();
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // Object objectRoles = request.getAttribute("roles");
+        // List<String> roles = generalUtils.castToListOfString(objectRoles);
+        // String authEmailId = temporaryCredential.getAuthEmailId();
+        // generalUtils.isAuthorizedForWrite(roles, authEmailId);
         return functionUtils.asyncChainForSts(
             temporaryCredential,
             () -> { return asyncServiceSingle(temporaryCredential, null, "pythonBoto"); },

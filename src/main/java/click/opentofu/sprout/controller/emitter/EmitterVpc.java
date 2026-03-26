@@ -49,8 +49,9 @@ public class EmitterVpc {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
 
         return functionUtils.asyncChain(
             resourceDto,
@@ -89,8 +90,9 @@ public class EmitterVpc {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
 
         return functionUtils.asyncChain(
             resourceDto,
@@ -148,8 +150,9 @@ public class EmitterVpc {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
 
         return functionUtils.asyncChain(
             resourceDto,
@@ -207,8 +210,9 @@ public class EmitterVpc {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
 
         return functionUtils.asyncChain(
             resourceDto,
@@ -266,8 +270,9 @@ public class EmitterVpc {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
 
         return functionUtils.asyncChain(
             resourceDto,

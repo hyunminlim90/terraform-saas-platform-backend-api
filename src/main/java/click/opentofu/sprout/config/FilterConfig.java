@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import click.opentofu.sprout.servlet.filter.DomainFilter;
+import click.opentofu.sprout.servlet.filter.FinalCorsFixFilter;
 import click.opentofu.sprout.servlet.filter.JwtAccessTokenFilter;
 
 @Configuration
@@ -25,6 +26,15 @@ public class FilterConfig {
         registration.setFilter(jwtAccessTokenFilter);
         registration.addUrlPatterns("/*");
         registration.setOrder(2);
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean<FinalCorsFixFilter> finalCorsFixFilterRegistration() {
+        FilterRegistrationBean<FinalCorsFixFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new FinalCorsFixFilter());
+        registration.addUrlPatterns("/*");
+        registration.setOrder(9999);
         return registration;
     }
 }

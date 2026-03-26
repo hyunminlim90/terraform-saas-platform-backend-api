@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class DomainFilter implements Filter {
 
-    private final String ALLOWED_HOST = "java.opentofu.click:443";
+    private final String ALLOWED_HOST = "java.opentofu.click";
 
     @Override
     public void doFilter(

@@ -1,9 +1,11 @@
 package click.opentofu.sprout.controller.resource.load;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,11 +47,22 @@ public class LoadResourceVpc {
     ) {
         resourceDto.setModuleName("aws_vpc");
 
-        Object objectRoles = request.getAttribute("roles");
-        Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
-        List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        try {
+            Object objectRoles = request.getAttribute("roles");
+            Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
+            List<String> roles = generalUtils.castToListOfString(objectRoles);
+            // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+            String email = generalUtils.castToString(objectEmail);
+            generalUtils.isAuthorizedForWrite(roles, email);
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            errorResponse.put("result", e.getMessage());
+
+            return CompletableFuture.completedFuture(
+                ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse)
+            );
+        }
 
         return functionUtils.asyncChain(
             resourceDto,

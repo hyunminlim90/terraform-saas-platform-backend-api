@@ -1,9 +1,11 @@
 package click.opentofu.sprout.controller.sts;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,14 +41,23 @@ public class DeleteRequest {
         @RequestBody AccountRequest accountRequest,
         HttpServletRequest request
     ) {
-        Object objectRoles = request.getAttribute("roles");
-        Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
-        List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        String accountId = accountRequest.getAccountId();
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
-        deleteService.deleteAwsAccount(accountId, authEmailId);
-        return ResponseEntity.ok().body(Collections.emptyMap());
+        try {
+            Object objectRoles = request.getAttribute("roles");
+            Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
+            List<String> roles = generalUtils.castToListOfString(objectRoles);
+            // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+            String accountId = accountRequest.getAccountId();
+            String email = generalUtils.castToString(objectEmail);
+            generalUtils.isAuthorizedForWrite(roles, email);
+            deleteService.deleteAwsAccount(accountId, email);
+            return ResponseEntity.ok().body(Collections.emptyMap());    
+        } catch (RuntimeException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("errorType", e.getClass().getSimpleName());
+            errorResponse.put("result", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+        }
     }
 
     @CrossOrigin(
@@ -62,9 +73,10 @@ public class DeleteRequest {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
-        deleteService.deleteAwsWorkspace(authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
+        deleteService.deleteAwsWorkspace(email);
         return ResponseEntity.ok().body(Collections.emptyMap());
     }
 }

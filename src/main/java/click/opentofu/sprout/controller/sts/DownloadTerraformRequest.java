@@ -47,8 +47,9 @@ public class DownloadTerraformRequest {
         Object objectRoles = request.getAttribute("roles");
         Object objectEmail = request.getAttribute("jwtAccessTokenEmail");
         List<String> roles = generalUtils.castToListOfString(objectRoles);
-        String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
-        generalUtils.isAuthorizedForWrite(roles, authEmailId);
+        // String authEmailId = generalUtils.castToString(objectEmail).split("@")[0];
+        String email = generalUtils.castToString(objectEmail);
+        generalUtils.isAuthorizedForWrite(roles, email);
 
         CompletableFuture<InputStreamResource> completableFuture = asyncServiceSingleDownload(awsCloudRequest, null, "terraformDownload");
         return functionUtils.asyncDownloadResponse(completableFuture, "terraform-module-download.zip");        

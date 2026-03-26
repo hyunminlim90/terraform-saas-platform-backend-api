@@ -128,7 +128,7 @@ public class JwtAccessTokenFilter implements Filter {
                 
                 httpRequest.setAttribute("roles", roles);
                 log.warn("------------------------------------------");
-                log.warn("JWT Access Token Email: " + jwtAccessTokenEmail.split("@")[0]);
+                log.warn("JWT Access Token Email: " + jwtAccessTokenEmail);
                 log.warn("JWT Access Token Roles: " + roles);
                 log.warn("------------------------------------------");
 

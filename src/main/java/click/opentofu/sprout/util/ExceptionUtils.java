@@ -4,12 +4,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletionException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ExceptionUtils {
+
+    private static final Set<String> TOO_MANY_REQUEST_ERRORS = Set.of(
+        "exec_tofu_apply_semaphore_queue_is_full",
+        "exec_tofu_plan_semaphore_queue_is_full",
+        "exec_tofu_destroy_semaphore_queue_is_full",
+        "exec_tofu_plan_destroy_semaphore_queue_is_full"
+    );
 
     public static ResponseEntity<Map<String, Object>> handleAsyncException(Throwable exception) {
         if (exception instanceof CompletionException) {
@@ -40,6 +48,22 @@ public class ExceptionUtils {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         } else if (cause instanceof InterruptedException) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
+        } else if (cause instanceof RuntimeException) {
+
+            String message = cause.getMessage();
+
+            if (
+                "is_authorized_for_write".equals(message) ||
+                "general_utils_validate_allowed_email_id_unauthorized_email".equals(message) )
+            {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+            }
+
+            if (TOO_MANY_REQUEST_ERRORS.contains(message)) {
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorResponse);
+            } 
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
