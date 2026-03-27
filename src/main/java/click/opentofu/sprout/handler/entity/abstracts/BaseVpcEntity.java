@@ -25,6 +25,8 @@ public abstract class BaseVpcEntity {
     private String name;
     private String moduleName;
 
+    /** Entity field declarations */
+
     private Boolean assignGeneratedIpv6CidrBlock;
     private String cidrBlock;
     private Boolean enableDnsHostnames;

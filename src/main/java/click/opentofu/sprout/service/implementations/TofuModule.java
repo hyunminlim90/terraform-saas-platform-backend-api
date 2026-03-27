@@ -112,6 +112,10 @@ public class TofuModule implements AsyncServiceSingle {
                                         moduleId = (String) obj.get("vpc_id");
                                         break;
 
+                                    case "aws_vpc_ipam_pool":
+                                        moduleId = (String) obj.get("vpc_ipam_pool_id");
+                                        break;
+
                                     default:
                                         throw new RuntimeException("tofu_module_service_layer_async_worker_supply_module_id_define_switch_default");
                                 }

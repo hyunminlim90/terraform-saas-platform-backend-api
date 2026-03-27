@@ -27,10 +27,13 @@ public class DuplicateEntityBuilder implements EntityHandler {
                 .tenantId(authUserIndex)
 
                 .vpcId(createOnlyId)
+                // .vpcArn(parameters.path("vpc_arn").asText())
                 .accountId(accountId)
                 .region(region)
                 .name(createOnlyId)
                 .moduleName(moduleName)
+
+                /** Declarations for DTO-to-Entity Mappings */
 
                 .assignGeneratedIpv6CidrBlock(parameters.path("assign_generated_ipv6_cidr_block").asBoolean())
                 .cidrBlock(parameters.path("cidr_block").asText())
@@ -45,8 +48,17 @@ public class DuplicateEntityBuilder implements EntityHandler {
                 .ipv6IpamPoolId(parameters.path("ipv6_ipam_pool_id").asText())
                 .ipv6NetmaskLength(parameters.path("ipv6_netmask_length").asText())
 
+                /** Declarations for DTO-to-Entity Mappings */
+
                 .tags(parseTags(parameters.path("tags")))
                 .build();
+
+            /** Declarations of Join Entity Converter Methods */
+
+
+            
+
+            /** Declarations of Join Entity Converter Methods */
 
             vpcRepository.save(tofuEntity);
         } catch (Exception error) {

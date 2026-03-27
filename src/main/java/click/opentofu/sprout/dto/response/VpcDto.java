@@ -12,10 +12,14 @@ public record VpcDto (
 
     String tenantId,
     String vpcId,
+    // String vpcArn,
     String accountId,
     String region,
     String name,
     String moduleName,
+
+    /** Record component definitions */
+
     Boolean assignGeneratedIpv6CidrBlock,
     String cidrBlock,
     Boolean enableDnsHostnames,
@@ -28,6 +32,9 @@ public record VpcDto (
     String ipv6CidrBlockNetworkBorderGroup,
     String ipv6IpamPoolId,
     String ipv6NetmaskLength,
+
+    /** Record component definitions */
+
     Map<String, String> tags,
     String resourceSaveName,
     LocalDateTime createdAt,
@@ -47,10 +54,14 @@ public record VpcDto (
 
             e.getTenantId(),
             e.getVpcId(),
+            // e.getVpcArn(),
             e.getAccountId(),
             e.getRegion(),
             e.getName(),
             e.getModuleName(),
+
+            /** JavaBeans getter method declaration */
+
             e.getAssignGeneratedIpv6CidrBlock(),
             e.getCidrBlock(),
             e.getEnableDnsHostnames(),
@@ -63,6 +74,9 @@ public record VpcDto (
             e.getIpv6CidrBlockNetworkBorderGroup(),
             e.getIpv6IpamPoolId(),
             e.getIpv6NetmaskLength(),
+
+            /** JavaBeans getter method declaration */
+
             e.getTags(),
             e.getResourceSaveName(),
             e.getCreatedAt(),

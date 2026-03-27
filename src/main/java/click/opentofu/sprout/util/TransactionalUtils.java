@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.response.VpcDto;
+import click.opentofu.sprout.dto.response.VpcIpamPoolDto;
 import click.opentofu.sprout.handler.entity.entity.vpc.entity.VpcEntity;
+import click.opentofu.sprout.handler.entity.entity.vpc_ipam_pool.entity.VpcIpamPoolEntity;
 import click.opentofu.sprout.handler.entity.interfaces.BaseQueryRepository;
 
 @Component
@@ -61,6 +63,8 @@ public class TransactionalUtils {
                     // Hibernate.initialize(entity.getLabels());
                     // Hibernate.initialize(entity.getDriverOpts());
                 }
+
+                case "aws_vpc_ipam_pool" -> {}
                 
                 default -> {}
             }
@@ -72,6 +76,7 @@ public class TransactionalUtils {
                 return (ModuleDto) switch (moduleName) {
 
                     case "aws_vpc" -> VpcDto.from((VpcEntity) e);
+                    case "aws_vpc_ipam_pool" -> VpcIpamPoolDto.from((VpcIpamPoolEntity) e);
 
                     default -> throw new RuntimeException("transactional_utils_fetch_with_lazy_init_switch_default");
                 };

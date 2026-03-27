@@ -60,6 +60,9 @@ public class SecurityConfig {
                          * 
                          * 실제 사용하는 API (모듈 추가하는 곳)
                          * 
+                         * aws_vpc
+                         * aws_vpc_ipam_pool
+                         * 
                          */
 
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/stream-emitter"),
@@ -73,7 +76,18 @@ public class SecurityConfig {
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_vpc"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_vpc"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_vpc"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_vpc")
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_vpc"),
+
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_vpc_ipam_pool"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_vpc_ipam_pool")
 
                     );
             })

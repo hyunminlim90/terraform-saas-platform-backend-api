@@ -36,5 +36,13 @@ public interface EntityHandler {
 
     /** Declaration of parse* methods for the Join entity handler */
 
-    
+    default Map<String, String> parseAllocationResourceTags (JsonNode allocationResourceTagsNode) {
+        Map<String, String> allocationResourceTagsMap = new HashMap<>();
+        if (!allocationResourceTagsNode.isMissingNode()) {
+            for (Map.Entry<String, JsonNode> entry : allocationResourceTagsNode.properties()) {
+                allocationResourceTagsMap.put(entry.getKey(), entry.getValue().asText());
+            }
+        }
+        return allocationResourceTagsMap;
+    }
 }

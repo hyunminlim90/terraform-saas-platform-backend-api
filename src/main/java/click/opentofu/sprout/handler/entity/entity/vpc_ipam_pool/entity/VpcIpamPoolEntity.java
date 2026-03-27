@@ -1,4 +1,4 @@
-package click.opentofu.sprout.handler.entity.entity.vpc.entity;
+package click.opentofu.sprout.handler.entity.entity.vpc_ipam_pool.entity;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import click.opentofu.sprout.handler.entity.abstracts.BaseVpcEntity;
+import click.opentofu.sprout.handler.entity.abstracts.BaseVpcIpamPoolEntity;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -29,12 +29,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Entity(name = "vpc_entity")
-@Table(name = "vpc_entity")
-public class VpcEntity extends BaseVpcEntity {
+@Entity(name = "vpc_ipam_pool_entity")
+@Table(name = "vpc_ipam_pool_entity")
+public class VpcIpamPoolEntity extends BaseVpcIpamPoolEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "vpc_entity_tags", joinColumns = @JoinColumn(name = "vpc_entity_pk"))
+    @CollectionTable(name = "vpc_ipam_pool_entity_tags", joinColumns = @JoinColumn(name = "vpc_ipam_pool_entity_pk"))
     @MapKeyColumn(name = "tag_key")
     @Column(name = "tag_value")
     @Builder.Default
@@ -42,9 +42,12 @@ public class VpcEntity extends BaseVpcEntity {
 
     /** Collection Mapping Accessors (Begin) */
 
-
-
-    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "vpc_ipam_pool_entity_allocation_resource_tags", joinColumns = @JoinColumn(name = "vpc_ipam_pool_entity_pk"))
+    @MapKeyColumn(name = "allocation_resource_tag_key")
+    @Column(name = "allocation_resource_tag_value")
+    @Builder.Default
+    private Map<String, String> allocationResourceTags = new HashMap<>();
 
     /** Collection Mapping Accessors (End) */
 

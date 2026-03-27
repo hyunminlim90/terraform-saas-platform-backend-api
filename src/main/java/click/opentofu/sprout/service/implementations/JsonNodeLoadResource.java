@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.dto.response.VpcDto;
+import click.opentofu.sprout.dto.response.VpcIpamPoolDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
 import click.opentofu.sprout.util.GeneralUtils;
 
@@ -90,6 +91,10 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
 
                             case "aws_vpc":
                                 resource = mapper.convertValue(entry.getValue(), VpcDto.class);
+                                break;
+
+                            case "aws_vpc_ipam_pool":
+                                resource = mapper.convertValue(entry.getValue(), VpcIpamPoolDto.class);
                                 break;
 
                             default:

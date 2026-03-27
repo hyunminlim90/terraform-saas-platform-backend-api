@@ -16,7 +16,8 @@ public class AppConstants {
 
     public static final Map<String, List<String>> TEXTAREA_PARAMS_BY_MODULE = Map.of(
 
-        "aws_vpc", List.of()
+        "aws_vpc", List.of(),
+        "aws_vpc_ipam_pool", List.of()
         
     );
 }

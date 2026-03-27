@@ -23,10 +23,13 @@ public class EntityBuilder implements EntityHandler {
                 .tenantId(authUserIndex)
 
                 .vpcId(parameters.path("vpc_id").asText())
+                // .vpcArn(parameters.path("vpc_arn").asText())
                 .accountId(parameters.path("account_id").asText())
                 .region(parameters.path("region").asText())
                 .name(parameters.path("vpc_id").asText())
                 .moduleName(moduleName)
+
+                /** Declarations for DTO-to-Entity Mappings */
 
                 .assignGeneratedIpv6CidrBlock(parameters.path("assign_generated_ipv6_cidr_block").asBoolean())
                 .cidrBlock(parameters.path("cidr_block").asText())
@@ -41,8 +44,17 @@ public class EntityBuilder implements EntityHandler {
                 .ipv6IpamPoolId(parameters.path("ipv6_ipam_pool_id").asText())
                 .ipv6NetmaskLength(parameters.path("ipv6_netmask_length").asText())
 
+                /** Declarations for DTO-to-Entity Mappings */
+
                 .tags(parseTags(parameters.path("tags")))
                 .build();
+
+            /** Declarations of Join Entity Converter Methods */
+
+            
+
+
+            /** Declarations of Join Entity Converter Methods */
 
             vpcRepository.save(tofuEntity);
         } catch (Exception error) {
