@@ -13,6 +13,7 @@ public class AwsStsVerify implements PythonHandler {
             .append("import boto3\n")
             .append("import botocore.exceptions\n")
             .append("import sys\n")
+            .append("import logging\n")
             .append("aws_access_key = '" + awsAccessKey + "'\n")
             .append("aws_secret_key = '" + awsSecretAccessKey + "'\n")
             .append("aws_session_token = '" + awsSessionToken + "'\n")

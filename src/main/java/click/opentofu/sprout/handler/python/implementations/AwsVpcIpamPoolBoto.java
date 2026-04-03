@@ -18,6 +18,7 @@ public class AwsVpcIpamPoolBoto implements PythonHandler {
             .append("import base64\n")
             .append("import sys\n")
             .append("from collections import defaultdict\n")
+            .append("import logging\n")
             .append("aws_access_key = '" + awsAccessKey + "'\n")
             .append("aws_secret_key = '" + awsSecretAccessKey + "'\n")
             .append("aws_session_token = '" + awsSessionToken + "'\n")
