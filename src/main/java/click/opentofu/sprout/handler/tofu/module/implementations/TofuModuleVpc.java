@@ -89,7 +89,7 @@ public class TofuModuleVpc implements ModuleHandler {
                 definedPythonFile
                     .append("        - \"" + vpcId + "\"\n");
             } catch (Exception error) {
-                throw new RuntimeException("build_tofu_module_config_file_id");
+                throw new RuntimeException("build_tofu_module_config_file_vpc_id");
             }
         }
 

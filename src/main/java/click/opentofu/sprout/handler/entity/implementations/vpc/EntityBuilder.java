@@ -18,7 +18,7 @@ public class EntityBuilder implements EntityHandler {
     @Override
     public void buildEntityAndSave(JsonNode parameters, String resourceSaveName, String authUserIndex, String moduleName) {
         try {
-            VpcEntity tofuEntity = VpcEntity.builder()
+            VpcEntity vpcEntity = VpcEntity.builder()
                 .resourceSaveName(resourceSaveName)
                 .tenantId(authUserIndex)
 
@@ -56,7 +56,7 @@ public class EntityBuilder implements EntityHandler {
 
             /** Declarations of Join Entity Converter Methods */
 
-            vpcRepository.save(tofuEntity);
+            vpcRepository.save(vpcEntity);
         } catch (Exception error) {
             throw new RuntimeException(error);
         }

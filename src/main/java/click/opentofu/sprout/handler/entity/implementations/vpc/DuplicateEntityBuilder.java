@@ -22,7 +22,7 @@ public class DuplicateEntityBuilder implements EntityHandler {
         try {
             String createOnlyId = "create-only-" + UUID.randomUUID().toString().replace("-", "").substring(0, 17);
 
-            VpcEntity tofuEntity = VpcEntity.builder()
+            VpcEntity vpcEntity = VpcEntity.builder()
                 .resourceSaveName(parameters.path("resource_save_name").asText())
                 .tenantId(authUserIndex)
 
@@ -60,7 +60,7 @@ public class DuplicateEntityBuilder implements EntityHandler {
 
             /** Declarations of Join Entity Converter Methods */
 
-            vpcRepository.save(tofuEntity);
+            vpcRepository.save(vpcEntity);
         } catch (Exception error) {
             throw new RuntimeException(error);
         }

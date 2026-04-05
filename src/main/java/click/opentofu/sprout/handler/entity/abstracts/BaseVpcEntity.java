@@ -20,6 +20,7 @@ public abstract class BaseVpcEntity {
     private String tenantId;
 
     private String vpcId;
+    // private String vpcArn;
     private String accountId;
     private String region;
     private String name;
