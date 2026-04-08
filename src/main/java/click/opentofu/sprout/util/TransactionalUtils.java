@@ -9,9 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.response.InstanceDto;
+import click.opentofu.sprout.dto.response.SecurityGroupDto;
+import click.opentofu.sprout.dto.response.SubnetDto;
 import click.opentofu.sprout.dto.response.VpcDto;
 import click.opentofu.sprout.dto.response.VpcIpamPoolDto;
 import click.opentofu.sprout.handler.entity.entity.instance.entity.InstanceEntity;
+import click.opentofu.sprout.handler.entity.entity.security_group.entity.SecurityGroupEntity;
+import click.opentofu.sprout.handler.entity.entity.subnet.entity.SubnetEntity;
 import click.opentofu.sprout.handler.entity.entity.vpc.entity.VpcEntity;
 import click.opentofu.sprout.handler.entity.entity.vpc_ipam_pool.entity.VpcIpamPoolEntity;
 import click.opentofu.sprout.handler.entity.interfaces.BaseQueryRepository;
@@ -64,10 +68,25 @@ public class TransactionalUtils {
                     Hibernate.initialize(entity.getEbsDevTags());
                     Hibernate.initialize(entity.getPrivateIpAddresses());
                 }
+                case "aws_subnet" -> {}
+                case "aws_security_group" -> {
+                    SecurityGroupEntity entity = (SecurityGroupEntity) e;
+            
+                    Hibernate.initialize(entity.getEgressCidrBlocks());
+                    Hibernate.initialize(entity.getEgressIpv6CidrBlocks());
+                    Hibernate.initialize(entity.getEgressPrefixListIds());
+                    Hibernate.initialize(entity.getEgressSecurityGroups());
+                    Hibernate.initialize(entity.getIngressCidrBlocks());
+                    Hibernate.initialize(entity.getIngressIpv6CidrBlocks());
+                    Hibernate.initialize(entity.getIngressPrefixListIds());
+                    Hibernate.initialize(entity.getIngressSecurityGroups());
+                }
                 
                 default -> {}
             }
         });
+
+        /** DTO 변환 로직 */
 
         return result.stream()
             .map(e -> {
@@ -77,6 +96,8 @@ public class TransactionalUtils {
                     case "aws_vpc" -> VpcDto.from((VpcEntity) e);
                     case "aws_vpc_ipam_pool" -> VpcIpamPoolDto.from((VpcIpamPoolEntity) e);
                     case "aws_instance" -> InstanceDto.from((InstanceEntity) e);
+                    case "aws_subnet" -> SubnetDto.from((SubnetEntity) e);
+                    case "aws_security_group" -> SecurityGroupDto.from((SecurityGroupEntity) e);
 
                     default -> throw new RuntimeException("transactional_utils_fetch_with_lazy_init_switch_default");
                 };

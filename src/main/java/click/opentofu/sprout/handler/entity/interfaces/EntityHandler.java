@@ -12,6 +12,15 @@ import click.opentofu.sprout.dto.sts.TemporaryCredential;
 import click.opentofu.sprout.handler.entity.entity.instance.entity.InstanceEntity;
 import click.opentofu.sprout.handler.entity.entity.instance.relation.EbsDevTagGroup;
 import click.opentofu.sprout.handler.entity.entity.instance.relation.PrivateIpAddressGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.entity.SecurityGroupEntity;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.EgressCidrBlockGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.EgressIpv6CidrBlockGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.EgressPrefixListIdGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.EgressSecurityGroupGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.IngressCidrBlockGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.IngressIpv6CidrBlockGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.IngressPrefixListIdGroup;
+import click.opentofu.sprout.handler.entity.entity.security_group.relation.IngressSecurityGroupGroup;
 
 public interface EntityHandler {
     default void buildEntityAndSaveForSts (JsonNode parameters, TemporaryCredential temporaryCredential) {};
@@ -108,6 +117,160 @@ public interface EntityHandler {
                     PrivateIpAddressGroup group = new PrivateIpAddressGroup();
                     group.setPrivateIpAddresses(list);
                     group.setInstanceEntity(instanceEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+        /** security_group */
+
+    default List<IngressCidrBlockGroup> parseToIngressCidrBlockGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<IngressCidrBlockGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    IngressCidrBlockGroup group = new IngressCidrBlockGroup();
+                    group.setIngressCidrBlocks(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<IngressIpv6CidrBlockGroup> parseToIngressIpv6CidrBlockGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<IngressIpv6CidrBlockGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    IngressIpv6CidrBlockGroup group = new IngressIpv6CidrBlockGroup();
+                    group.setIngressIpv6CidrBlocks(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<IngressPrefixListIdGroup> parseToIngressPrefixListIdGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<IngressPrefixListIdGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    IngressPrefixListIdGroup group = new IngressPrefixListIdGroup();
+                    group.setIngressPrefixListIds(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<IngressSecurityGroupGroup> parseToIngressSecurityGroupGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<IngressSecurityGroupGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    IngressSecurityGroupGroup group = new IngressSecurityGroupGroup();
+                    group.setIngressSecurityGroups(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<EgressCidrBlockGroup> parseToEgressCidrBlockGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<EgressCidrBlockGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    EgressCidrBlockGroup group = new EgressCidrBlockGroup();
+                    group.setEgressCidrBlocks(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<EgressIpv6CidrBlockGroup> parseToEgressIpv6CidrBlockGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<EgressIpv6CidrBlockGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    EgressIpv6CidrBlockGroup group = new EgressIpv6CidrBlockGroup();
+                    group.setEgressIpv6CidrBlocks(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<EgressPrefixListIdGroup> parseToEgressPrefixListIdGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<EgressPrefixListIdGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    EgressPrefixListIdGroup group = new EgressPrefixListIdGroup();
+                    group.setEgressPrefixListIds(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
+                    result.add(group);
+                }
+            }
+        }
+        return result;
+    }
+
+    default List<EgressSecurityGroupGroup> parseToEgressSecurityGroupGroupList (JsonNode parameters, SecurityGroupEntity securityGroupEntity) {
+        List<EgressSecurityGroupGroup> result = new ArrayList<>();
+        if (parameters.isArray()) {
+            for (JsonNode parameter : parameters) {
+                if (parameter.isArray()) {
+                    List<String> list = new ArrayList<>();
+                    for (JsonNode element : parameter) {
+                        list.add(element.asText());
+                    }
+                    EgressSecurityGroupGroup group = new EgressSecurityGroupGroup();
+                    group.setEgressSecurityGroups(list);
+                    group.setSecurityGroupEntity(securityGroupEntity);
                     result.add(group);
                 }
             }

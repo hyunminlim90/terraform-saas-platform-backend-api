@@ -848,7 +848,7 @@ public class TofuModuleInstance implements ModuleHandler {
                                 }
                             }
                             definedPythonFile
-                                .append("    - \"" + instanceId + "_userData.sh\"\n");
+                                .append("    - \"" + instanceId + "_user_data.sh\"\n");
                         }
                     } catch (Exception error) {
                         throw new RuntimeException("build_tofu_module_config_file_user_data");

@@ -52,7 +52,7 @@ public class CleanUpDirectory implements AsyncServiceSingle {
                     deleteDirectoryPath[0] = Paths.get(ROOT_PATH, authEmailId, uuid);
 
                     if (deleteDirectoryPath[0] != null) {
-                        generalUtils.deleteDirectoryRecursively(deleteDirectoryPath[0]);
+                        // generalUtils.deleteDirectoryRecursively(deleteDirectoryPath[0]);
                         log.info("Successfully deleted directory: " + deleteDirectoryPath[0].toString());
                     }
 

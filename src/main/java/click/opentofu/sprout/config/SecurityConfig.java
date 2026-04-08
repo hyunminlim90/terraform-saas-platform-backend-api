@@ -63,6 +63,8 @@ public class SecurityConfig {
                          * aws_vpc
                          * aws_vpc_ipam_pool
                          * aws_instance
+                         * aws_subnet
+                         * aws_security_group
                          * 
                          */
 
@@ -99,7 +101,29 @@ public class SecurityConfig {
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_instance"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_instance"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_instance"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_instance")
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_instance"),
+
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_subnet"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_subnet"),
+
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_security_group"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_security_group")
 
                     );
             })

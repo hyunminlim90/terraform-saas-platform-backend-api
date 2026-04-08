@@ -113,7 +113,7 @@ public class ExecTofuDestroy implements AsyncServiceSingle {
                     () -> {
                         try {
                             if (deleteBoto3DirectoryPath[0] != null) {
-                                generalUtils.deleteDirectoryRecursively(deleteBoto3DirectoryPath[0]);
+                                // generalUtils.deleteDirectoryRecursively(deleteBoto3DirectoryPath[0]);
                                 log.info("Successfully deleted directory: " + deleteBoto3DirectoryPath[0].toString());
                             }
                         } catch (Exception error) {

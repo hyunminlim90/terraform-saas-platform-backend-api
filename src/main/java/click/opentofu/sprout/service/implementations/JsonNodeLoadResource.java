@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.dto.response.InstanceDto;
+import click.opentofu.sprout.dto.response.SecurityGroupDto;
+import click.opentofu.sprout.dto.response.SubnetDto;
 import click.opentofu.sprout.dto.response.VpcDto;
 import click.opentofu.sprout.dto.response.VpcIpamPoolDto;
 import click.opentofu.sprout.service.interfaces.AsyncServiceSingle;
@@ -102,6 +104,14 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
                                 resource = mapper.convertValue(entry.getValue(), InstanceDto.class);
                                 break;
 
+                            case "aws_subnet":
+                                resource = mapper.convertValue(entry.getValue(), SubnetDto.class);
+                                break;
+
+                            case "aws_security_group":
+                                resource = mapper.convertValue(entry.getValue(), SecurityGroupDto.class);
+                                break;
+
                             default:
                                 throw new RuntimeException("json_node_load_resource_service_layer_async_worker_supply_switch_default");
                         }
@@ -120,7 +130,7 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
                     () -> {
                         try {
                             if (deleteBoto3DirectoryPath[0] != null) {
-                                generalUtils.deleteDirectoryRecursively(deleteBoto3DirectoryPath[0]);
+                                // generalUtils.deleteDirectoryRecursively(deleteBoto3DirectoryPath[0]);
                                 log.info("Successfully deleted directory: " + deleteBoto3DirectoryPath[0].toString());
                             }
                         } catch (Exception error) {

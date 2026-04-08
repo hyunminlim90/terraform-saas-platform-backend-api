@@ -120,6 +120,14 @@ public class TofuModule implements AsyncServiceSingle {
                                         moduleId = (String) obj.get("instance_id");
                                         break;
 
+                                    case "aws_subnet":
+                                        moduleId = (String) obj.get("subnet_id");
+                                        break;
+
+                                    case "aws_security_group":
+                                        moduleId = (String) obj.get("security_group_id");
+                                        break;
+
                                     default:
                                         throw new RuntimeException("tofu_module_service_layer_async_worker_supply_module_id_define_switch_default");
                                 }
@@ -144,9 +152,9 @@ public class TofuModule implements AsyncServiceSingle {
 
                                         /** File extension varies by textarea parameter */
 
-                                        if ("aws_ecs_task_definition".equals(moduleName) && "containerDefinitions".equals(key)) {
+                                        if ("aws_ecs_task_definition".equals(moduleName) && "container_definitions".equals(key)) {
                                             textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, moduleId + "_" + key + ".json");
-                                        } else if ("aws_instance".equals(moduleName) && "userData".equals(key)) {
+                                        } else if ("aws_instance".equals(moduleName) && "user_data".equals(key)) {
                                             textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, moduleId + "_" + key + ".sh");
                                         } else {
                                             textareaFilePath = Paths.get(ROOT_PATH, authEmailId, uuid, regionCode, "tofu_module", moduleName, moduleId + "_" + key + ".default");
