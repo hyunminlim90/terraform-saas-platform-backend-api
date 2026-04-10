@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.dto.response.InstanceDto;
+import click.opentofu.sprout.dto.response.InternetGatewayDto;
 import click.opentofu.sprout.dto.response.SecurityGroupDto;
 import click.opentofu.sprout.dto.response.SubnetDto;
 import click.opentofu.sprout.dto.response.VpcDto;
@@ -110,6 +111,10 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
 
                             case "aws_security_group":
                                 resource = mapper.convertValue(entry.getValue(), SecurityGroupDto.class);
+                                break;
+
+                            case "aws_internet_gateway":
+                                resource = mapper.convertValue(entry.getValue(), InternetGatewayDto.class);
                                 break;
 
                             default:

@@ -20,7 +20,8 @@ public class AppConstants {
         "aws_vpc_ipam_pool", List.of(),
         "aws_instance", List.of("user_data"),
         "aws_subnet", List.of(),
-        "aws_security_group", List.of()
+        "aws_security_group", List.of(),
+        "aws_internet_gateway", List.of()
         
     );
 }

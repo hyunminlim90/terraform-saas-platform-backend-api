@@ -128,6 +128,10 @@ public class TofuModule implements AsyncServiceSingle {
                                         moduleId = (String) obj.get("security_group_id");
                                         break;
 
+                                    case "aws_internet_gateway":
+                                        moduleId = (String) obj.get("internet_gateway_id");
+                                        break;
+
                                     default:
                                         throw new RuntimeException("tofu_module_service_layer_async_worker_supply_module_id_define_switch_default");
                                 }

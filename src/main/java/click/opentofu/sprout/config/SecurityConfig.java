@@ -65,6 +65,7 @@ public class SecurityConfig {
                          * aws_instance
                          * aws_subnet
                          * aws_security_group
+                         * aws_internet_gateway
                          * 
                          */
 
@@ -123,7 +124,26 @@ public class SecurityConfig {
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_security_group"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_security_group"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_security_group"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_security_group")
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_security_group"),
+
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_internet_gateway"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_internet_gateway")
+
+
+
+
+
+
+
+
 
                     );
             })
