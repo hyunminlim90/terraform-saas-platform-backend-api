@@ -10,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.response.InstanceDto;
 import click.opentofu.sprout.dto.response.InternetGatewayDto;
+import click.opentofu.sprout.dto.response.RouteTableDto;
 import click.opentofu.sprout.dto.response.SecurityGroupDto;
 import click.opentofu.sprout.dto.response.SubnetDto;
 import click.opentofu.sprout.dto.response.VpcDto;
 import click.opentofu.sprout.dto.response.VpcIpamPoolDto;
 import click.opentofu.sprout.handler.entity.entity.instance.entity.InstanceEntity;
 import click.opentofu.sprout.handler.entity.entity.internet_gateway.entity.InternetGatewayEntity;
+import click.opentofu.sprout.handler.entity.entity.route_table.entity.RouteTableEntity;
 import click.opentofu.sprout.handler.entity.entity.security_group.entity.SecurityGroupEntity;
 import click.opentofu.sprout.handler.entity.entity.subnet.entity.SubnetEntity;
 import click.opentofu.sprout.handler.entity.entity.vpc.entity.VpcEntity;
@@ -84,6 +86,7 @@ public class TransactionalUtils {
                     Hibernate.initialize(entity.getIngressSecurityGroups());
                 }
                 case "aws_internet_gateway" -> {}
+                case "aws_route_table" -> {}
                 
                 default -> {}
             }
@@ -102,6 +105,7 @@ public class TransactionalUtils {
                     case "aws_subnet" -> SubnetDto.from((SubnetEntity) e);
                     case "aws_security_group" -> SecurityGroupDto.from((SecurityGroupEntity) e);
                     case "aws_internet_gateway" -> InternetGatewayDto.from((InternetGatewayEntity) e);
+                    case "aws_route_table" -> RouteTableDto.from((RouteTableEntity) e);
 
                     default -> throw new RuntimeException("transactional_utils_fetch_with_lazy_init_switch_default");
                 };

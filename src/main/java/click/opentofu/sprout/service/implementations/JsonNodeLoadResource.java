@@ -22,6 +22,7 @@ import click.opentofu.sprout.dto.interfaces.ModuleDto;
 import click.opentofu.sprout.dto.request.ResourceDto;
 import click.opentofu.sprout.dto.response.InstanceDto;
 import click.opentofu.sprout.dto.response.InternetGatewayDto;
+import click.opentofu.sprout.dto.response.RouteTableDto;
 import click.opentofu.sprout.dto.response.SecurityGroupDto;
 import click.opentofu.sprout.dto.response.SubnetDto;
 import click.opentofu.sprout.dto.response.VpcDto;
@@ -115,6 +116,10 @@ public class JsonNodeLoadResource implements AsyncServiceSingle {
 
                             case "aws_internet_gateway":
                                 resource = mapper.convertValue(entry.getValue(), InternetGatewayDto.class);
+                                break;
+
+                            case "aws_route_table":
+                                resource = mapper.convertValue(entry.getValue(), RouteTableDto.class);
                                 break;
 
                             default:
