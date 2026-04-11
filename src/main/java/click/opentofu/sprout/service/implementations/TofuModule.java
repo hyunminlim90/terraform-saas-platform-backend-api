@@ -136,6 +136,10 @@ public class TofuModule implements AsyncServiceSingle {
                                         moduleId = (String) obj.get("route_table_id");
                                         break;
 
+                                    case "aws_route_table_association":
+                                        moduleId = (String) obj.get("route_table_association_id");
+                                        break;
+
                                     default:
                                         throw new RuntimeException("tofu_module_service_layer_async_worker_supply_module_id_define_switch_default");
                                 }

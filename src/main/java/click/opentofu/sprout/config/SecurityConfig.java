@@ -67,6 +67,7 @@ public class SecurityConfig {
                          * aws_security_group
                          * aws_internet_gateway
                          * aws_route_table
+                         * aws_route_table_association
                          * 
                          */
 
@@ -147,7 +148,18 @@ public class SecurityConfig {
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_route_table"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_route_table"),
                         (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_route_table"),
-                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_route_table")
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_route_table"),
+
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-resource/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/save-resource/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/load-draft-version/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/issue-unique-id/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-apply/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/delete-draft/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-plan-destroy/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/exec-tofu-destroy/aws_route_table_association"),
+                        (request) -> request.getRequestURI().equals("/api/v1/request/aws-resources/duplicate-draft/aws_route_table_association")
 
 
 

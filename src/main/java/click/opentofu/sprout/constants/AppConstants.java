@@ -22,7 +22,8 @@ public class AppConstants {
         "aws_subnet", List.of(),
         "aws_security_group", List.of(),
         "aws_internet_gateway", List.of(),
-        "aws_route_table", List.of()
+        "aws_route_table", List.of(),
+        "aws_route_table_association", List.of()
         
     );
 }
